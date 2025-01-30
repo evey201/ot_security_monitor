@@ -1,16 +1,18 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
-from app.db import get_db
+from app.db import get_db, UserRole
 from app.models import PowerReadingCreate, PowerReading
 from app.services import MonitoringService
+from app.api import require_operator
 
-router = APIRouter()
+router = APIRouter(tags=["monitoring"])
 
 @router.post("/readings/", response_model=PowerReading)
 async def create_power_reading(
     reading: PowerReadingCreate,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    current_role: UserRole = Depends(require_operator)
 ):
     """Create a new power reading"""
     monitoring_service = MonitoringService(db)
