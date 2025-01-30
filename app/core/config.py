@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     # Security Settings
     SECRET_KEY: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    ALGORITHM: str = 'HS256'
     
     # Monitoring Settings
     POWER_READING_INTERVAL: int = 60  # seconds

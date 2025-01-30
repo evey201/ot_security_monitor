@@ -54,3 +54,27 @@ class Alert(Base):
     is_acknowledged = Column(Boolean, default=False)
     acknowledged_by = Column(String)
     acknowledged_at = Column(DateTime(timezone=True))
+    
+from sqlalchemy import Column, Integer, String, Boolean, Enum as SQLAlchemyEnum
+import enum
+
+# Add this to your existing models.py
+class UserRole(str, enum.Enum):
+    ADMIN = "admin"
+    OPERATOR = "operator"
+    VIEWER = "viewer"
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True, nullable=False)
+    username = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    role = Column(SQLAlchemyEnum(UserRole), default=UserRole.VIEWER)
+    is_active = Column(Boolean, default=True)
+    
+    # Timestamps
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    deleted_at = Column(DateTime, nullable=True)
