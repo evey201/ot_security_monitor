@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey, Enum, Boolean
+from sqlalchemy import Column, Integer, Float, String, DateTime, ForeignKey, Enum as SQLAlchemyEnum, Boolean
+import enum
 from sqlalchemy.orm import relationship, DeclarativeBase
 from sqlalchemy.sql import func
 import enum
@@ -42,7 +43,7 @@ class Alert(Base):
     timestamp = Column(DateTime(timezone=True), server_default=func.now(), index=True)
     
     # Alert Details
-    severity = Column(Enum(AlertSeverity), nullable=False)
+    severity = Column(SQLAlchemyEnum(AlertSeverity), nullable=False)
     message = Column(String, nullable=False)
     description = Column(String)
     
@@ -55,8 +56,7 @@ class Alert(Base):
     acknowledged_by = Column(String)
     acknowledged_at = Column(DateTime(timezone=True))
     
-from sqlalchemy import Column, Integer, String, Boolean, Enum as SQLAlchemyEnum
-import enum
+
 
 # Add this to your existing models.py
 class UserRole(str, enum.Enum):
@@ -78,3 +78,23 @@ class User(Base):
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     deleted_at = Column(DateTime, nullable=True)
+    
+
+
+# Add this to your existing models.py
+
+class Session(Base):
+    __tablename__ = "sessions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    token = Column(String, unique=True, index=True)
+    expires_at = Column(DateTime(timezone=True))
+    device_info = Column(String, nullable=True)  # Store user agent/device info
+    ip_address = Column(String, nullable=True)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    last_activity = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    # Relationship with User model
+    user = relationship("User", back_populates="sessions")

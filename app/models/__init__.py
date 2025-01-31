@@ -1,1 +1,1 @@
-from .schemas import PowerReadingCreate, PowerReading, PowerReadingBase, User, UserCreate, Token, PasswordChange, PasswordReset
+from .schemas import PowerReadingCreate, PowerReading, PowerReadingBase, User, UserCreate, Token, PasswordChange, PasswordReset, SessionInfo

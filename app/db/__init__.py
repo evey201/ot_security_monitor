@@ -1,2 +1,2 @@
 from .session import get_db
-from .models import Alert, AlertSeverity, PowerReading, UserRole, User
+from .models import Alert, AlertSeverity, PowerReading, UserRole, User, Session
