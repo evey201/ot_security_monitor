@@ -24,3 +24,12 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     username: Optional[str] = None
     role: Optional[UserRole] = None
+    
+class PasswordChange(BaseModel):
+    old_password: str
+    new_password: str
+
+class PasswordReset(BaseModel):
+    username: str
+    new_password: str
+    admin_token: Optional[str] = None  # For admin-initiated reset
